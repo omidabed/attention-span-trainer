@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attention Span Trainer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #f59e0b;
+      --accent-2: #60a5fa;
+      --good: #34d399;
+      --bad: #f87171;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1220, #111827 35%, #0f172a);
+      color: var(--text);
+    }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: rgba(17,24,39,0.95);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.35rem; }
+    h3 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    p { color: var(--muted); line-height: 1.55; }
+    .pill {
+      display: inline-block;
+      background: rgba(245,158,11,0.14);
+      color: #fbbf24;
+      border: 1px solid rgba(245,158,11,0.35);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+    .col-8 { grid-column: span 8; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-12 { grid-column: span 12; }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .kpi {
+      background: var(--panel-2);
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .kpi strong { font-size: 1.5rem; display: block; margin-top: 6px; }
+    .controls, .phase-list, .week-grid {
+      display: grid;
+      gap: 12px;
+    }
+    button, select, input[type="number"], input[type="text"] {
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    button {
+      cursor: pointer;
+      background: linear-gradient(180deg, #1d4ed8, #1e40af);
+      border-color: rgba(96,165,250,0.4);
+    }
+    button.secondary { background: #172033; }
+    button.warn { background: linear-gradient(180deg, #b45309, #92400e); }
+    .timer {
+      text-align: center;
+      padding: 18px;
+      background: radial-gradient(circle at top, rgba(96,165,250,0.12), transparent 60%), var(--panel-2);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+    .time {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 8px 0 12px;
+      letter-spacing: 0.03em;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .progress-wrap {
+      background: #0b1220;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      height: 14px;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .3s ease;
+    }
+    .phase {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      background: var(--panel-2);
+    }
+    .phase.active { outline: 2px solid rgba(245,158,11,0.35); }
+    .checklist label {
+      display: block;
+      padding: 8px 0;
+      color: var(--text);
+    }
+    .checklist input { margin-right: 10px; }
+    .weekly {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .day {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 110px;
+    }
+    .day h4 { margin: 0 0 8px; }
+    .day small { color: var(--muted); display: block; margin-top: 6px; }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 12px;
+      background: #0b1220;
+      color: var(--text);
+      font: inherit;
+    }
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 12px;
+    }
+    .tag { color: var(--good); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .danger { color: var(--bad); }
+    @media (max-width: 900px) {
+      .hero, .grid { display: block; }
+      .card { margin-bottom: 20px; }
+      .weekly { grid-template-columns: repeat(2, 1fr); }
+      .kpis { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <section class="card">
+        <div class="pill">Interactive focus dashboard</div>
+        <h1>Extend Your Attention Span</h1>
+        <p>Built around your actual work style: deep technical research, structured training, and a brain that should be doing uncertainty budgets instead of chasing random notifications like a lab rat with Wi-Fi.</p>
+        <div class="kpis">
+          <div class="kpi"><span class="muted">Current Phase</span><strong id="phaseLabel">Phase 1</strong></div>
+          <div class="kpi"><span class="muted">Weekly Deep Work Goal</span><strong id="goalLabel">7 h</strong></div>
+          <div class="kpi"><span class="muted">Progress</span><strong id="percentLabel">0%</strong></div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Quick Controls</h2>
+        <div class="controls">
+          <label>Choose phase
+            <select id="phaseSelect">
+              <option value="1">Phase 1: Stabilize Attention</option>
+              <option value="2">Phase 2: Expand Endurance</option>
+              <option value="3">Phase 3: Boredom Training</option>
+              <option value="4">Phase 4: Deep Reading</option>
+              <option value="5">Phase 5: Dopamine Management</option>
+            </select>
+          </label>
+          <label>Deep work target for this week (hours)
+            <input id="goalInput" type="number" min="1" max="30" value="7" />
+          </label>
+          <div class="row">
+            <button id="saveBtn">Save dashboard state</button>
+            <button id="resetBtn" class="warn">Reset week</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section class="card col-8">
+        <h2>Focus Timer</h2>
+        <p>Use this for your 09:30-11:00 block or any shorter sprint. Boringly effective. Annoying, isn’t it?</p>
+        <div class="timer">
+          <div class="row" style="justify-content:center; margin-bottom:10px;">
+            <button class="secondary preset" data-min="25">25 min</button>
+            <button class="secondary preset" data-min="50">50 min</button>
+            <button class="secondary preset" data-min="90">90 min</button>
+          </div>
+          <div class="time" id="timerDisplay">90:00</div>
+          <div class="row" style="justify-content:center;">
+            <button id="startBtn">Start</button>
+            <button id="pauseBtn" class="secondary">Pause</button>
+            <button id="completeBtn" class="secondary">Mark Session Done</button>
+          </div>
+          <p class="footer-note">Break rule: do not scroll during breaks unless your life ambition is to have the concentration of wet cardboard.</p>
+        </div>
+      </section>
+
+      <section class="card col-4">
+        <h2>Weekly Progress</h2>
+        <p><span class="tag" id="loggedHours">0.0 h</span> logged out of <span id="goalInline">7 h</span></p>
+        <div class="progress-wrap"><div class="progress" id="progressBar"></div></div>
+        <div class="row" style="margin-top:12px;">
+          <button id="addHalf">+0.5 h</button>
+          <button id="addOne" class="secondary">+1 h</button>
+          <button id="subtract" class="secondary">-0.5 h</button>
+        </div>
+        <p class="footer-note">Month targets from the plan: Week 1-2 = 7h, Week 3-4 = 10h, Month 2 = 12-15h.</p>
+      </section>
+
+      <section class="card col-6">
+        <h2>Phase Checklist</h2>
+        <div class="phase-list" id="phaseList"></div>
+      </section>
+
+      <section class="card col-6">
+        <h2>Today’s Anti-Task-Switching Setup</h2>
+        <div class="checklist">
+          <label><input type="checkbox" class="daily-check" data-key="phoneAway"> Phone out of reach</label>
+          <label><input type="checkbox" class="daily-check" data-key="oneTab"> One browser window / essential tabs only</label>
+          <label><input type="checkbox" class="daily-check" data-key="captureList"> Capture list ready for distractions</label>
+          <label><input type="checkbox" class="daily-check" data-key="outputDefined"> Concrete output defined before starting</label>
+          <label><input type="checkbox" class="daily-check" data-key="noScrollBreak"> No scrolling during breaks</label>
+        </div>
+        <p class="footer-note" id="dailyScore">0 / 5 done</p>
+      </section>
+
+      <section class="card col-12">
+        <h2>Weekly Structure</h2>
+        <div class="weekly">
+          <div class="day"><h4>Mon</h4>Deep research<br><small>Gym optional after mental suffering</small></div>
+          <div class="day"><h4>Tue</h4>Deep research + cardio<br><small>Protect the morning block</small></div>
+          <div class="day"><h4>Wed</h4>Focused technical work<br><small>Scripts, measurement logic, reading</small></div>
+          <div class="day"><h4>Thu</h4>Lighter tasks<br><small>Admin, lab setup, low-cognitive chores</small></div>
+          <div class="day"><h4>Fri</h4>Writing + synthesis<br><small>Summaries, figures, paper notes</small></div>
+          <div class="day"><h4>Sat</h4>2-3h light research<br><small>Home session, lower pressure</small></div>
+          <div class="day"><h4>Sun</h4>Recovery or light reading<br><small>Do not fry your brain for sport</small></div>
+        </div>
+      </section>
+
+      <section class="card col-12">
+        <h2>Distraction Capture List</h2>
+        <p>Write impulses here instead of switching tasks. Your brain thinks every thought is urgent. It’s adorable and wrong.</p>
+        <textarea id="captureText" placeholder="Example: check combiner datasheet, answer message, read ENBW paper..."></textarea>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const phases = {
+      1: {
+        title: 'Phase 1: Stabilize Attention',
+        goal: 7,
+        items: [
+          'No phone for 30 minutes after waking',
+          'Protect 09:30-11:00 deep work block',
+          'Use capture list instead of switching tasks'
+        ]
+      },
+      2: {
+        title: 'Phase 2: Expand Endurance',
+        goal: 10,
+        items: [
+          'Add second deep work block',
+          'Use 60-90 minute focus windows',
+          'Keep breaks free of scrolling'
+        ]
+      },
+      3: {
+        title: 'Phase 3: Boredom Training',
+        goal: 10,
+        items: [
+          '15 minutes daily with no input',
+          'Walk or sit without music or podcast',
+          'Let your mind generate ideas instead of consuming noise'
+        ]
+      },
+      4: {
+        title: 'Phase 4: Deep Reading',
+        goal: 12,
+        items: [
+          '30 minutes of technical reading daily',
+          'No phone during reading',
+          'Write a short summary after each session'
+        ]
+      },
+      5: {
+        title: 'Phase 5: Dopamine Management',
+        goal: 12,
+        items: [
+          'Batch social media to a fixed window',
+          'Reduce short-form content',
+          'Protect baseline stimulation so deep work feels possible again'
+        ]
+      }
+    };
+
+    const state = JSON.parse(localStorage.getItem('attentionSpanDashboard') || '{}');
+    let timerSeconds = state.timerSeconds || 5400;
+    let interval = null;
+    let loggedHours = state.loggedHours || 0;
+
+    const phaseSelect = document.getElementById('phaseSelect');
+    const goalInput = document.getElementById('goalInput');
+    const phaseLabel = document.getElementById('phaseLabel');
+    const goalLabel = document.getElementById('goalLabel');
+    const goalInline = document.getElementById('goalInline');
+    const percentLabel = document.getElementById('percentLabel');
+    const loggedHoursEl = document.getElementById('loggedHours');
+    const progressBar = document.getElementById('progressBar');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const phaseList = document.getElementById('phaseList');
+    const captureText = document.getElementById('captureText');
+
+    function saveState() {
+      const checks = {};
+      document.querySelectorAll('.daily-check').forEach(cb => checks[cb.dataset.key] = cb.checked);
+      localStorage.setItem('attentionSpanDashboard', JSON.stringify({
+        phase: phaseSelect.value,
+        goal: Number(goalInput.value),
+        loggedHours,
+        timerSeconds,
+        captureText: captureText.value,
+        checks
+      }));
+    }
+
+    function renderPhases() {
+      const current = phases[phaseSelect.value];
+      phaseLabel.textContent = current.title.replace(':', '');
+      phaseList.innerHTML = Object.entries(phases).map(([id, phase]) => `
+        <div class="phase ${id === phaseSelect.value ? 'active' : ''}">
+          <h3>${phase.title}</h3>
+          <ul>
+            ${phase.items.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    function renderProgress() {
+      const goal = Number(goalInput.value) || 7;
+      const percent = Math.min(100, Math.round((loggedHours / goal) * 100));
+      loggedHoursEl.textContent = `${loggedHours.toFixed(1)} h`;
+      goalLabel.textContent = `${goal} h`;
+      goalInline.textContent = `${goal} h`;
+      percentLabel.textContent = `${percent}%`;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function renderTimer() {
+      const min = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const sec = String(timerSeconds % 60).padStart(2, '0');
+      timerDisplay.textContent = `${min}:${sec}`;
+    }
+
+    function updateDailyScore() {
+      const total = document.querySelectorAll('.daily-check').length;
+      const done = [...document.querySelectorAll('.daily-check')].filter(cb => cb.checked).length;
+      document.getElementById('dailyScore').textContent = `${done} / ${total} done`;
+    }
+
+    function setPreset(minutes) {
+      timerSeconds = minutes * 60;
+      renderTimer();
+      saveState();
+    }
+
+    document.querySelectorAll('.preset').forEach(btn => {
+      btn.addEventListener('click', () => setPreset(Number(btn.dataset.min)));
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if (interval) return;
+      interval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds -= 1;
+          renderTimer();
+          saveState();
+        } else {
+          clearInterval(interval);
+          interval = null;
+          alert('Focus block complete. Miraculously, sustained attention did not kill you.');
+        }
+      }, 1000);
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      clearInterval(interval);
+      interval = null;
+      saveState();
+    });
+
+    document.getElementById('completeBtn').addEventListener('click', () => {
+      loggedHours += Math.max(0.5, Math.round((timerSeconds === 0 ? 90 : (Number(timerDisplay.textContent.split(':')[0]) || 0)) / 60 * 10) / 10);
+      renderProgress();
+      saveState();
+    });
+
+    document.getElementById('addHalf').addEventListener('click', () => { loggedHours += 0.5; renderProgress(); saveState(); });
+    document.getElementById('addOne').addEventListener('click', () => { loggedHours += 1; renderProgress(); saveState(); });
+    document.getElementById('subtract').addEventListener('click', () => { loggedHours = Math.max(0, loggedHours - 0.5); renderProgress(); saveState(); });
+
+    phaseSelect.addEventListener('change', () => {
+      const phase = phases[phaseSelect.value];
+      goalInput.value = phase.goal;
+      renderPhases();
+      renderProgress();
+      saveState();
+    });
+
+    goalInput.addEventListener('input', () => { renderProgress(); saveState(); });
+    captureText.addEventListener('input', saveState);
+    document.querySelectorAll('.daily-check').forEach(cb => cb.addEventListener('change', () => { updateDailyScore(); saveState(); }));
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      saveState();
+      alert('Saved. Your future self has fewer excuses now.');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      loggedHours = 0;
+      timerSeconds = 5400;
+      captureText.value = '';
+      document.querySelectorAll('.daily-check').forEach(cb => cb.checked = false);
+      renderTimer();
+      renderProgress();
+      updateDailyScore();
+      saveState();
+    });
+
+    // Init from saved state
+    phaseSelect.value = String(state.phase || '1');
+    goalInput.value = String(state.goal || phases[phaseSelect.value].goal);
+    captureText.value = state.captureText || '';
+    if (state.checks) {
+      document.querySelectorAll('.daily-check').forEach(cb => cb.checked = !!state.checks[cb.dataset.key]);
+    }
+    renderPhases();
+    renderTimer();
+    renderProgress();
+    updateDailyScore();
+  </script>
+</body>
+</html>
