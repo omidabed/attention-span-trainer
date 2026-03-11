@@ -106,7 +106,7 @@
       margin-top: 6px;
     }
 
-    .controls, .phase-list, .week-grid {
+    .controls, .phase-list {
       display: grid;
       gap: 12px;
     }
@@ -243,7 +243,6 @@
 </head>
 <body>
   <div class="container">
-
     <section class="card" style="margin-bottom:20px;">
       <h2>Cloud Sync</h2>
       <div class="row">
@@ -432,6 +431,8 @@
     const timerDisplay = document.getElementById('timerDisplay');
     const phaseList = document.getElementById('phaseList');
     const captureText = document.getElementById('captureText');
+    const authStatus = document.getElementById('authStatus');
+    const emailInput = document.getElementById('emailInput');
 
     async function loadStateFromCloud() {
       if (!currentUser) return;
@@ -448,15 +449,18 @@
       }
 
       if (!data) {
-        const { error: insertError } = await db.from('focus_state').upsert({
-          user_id: currentUser.id,
-          phase: 1,
-          goal: Number(goalInput.value) || 7,
-          logged_hours: 0,
-          timer_seconds: 5400,
-          capture_text: '',
-          checks: {}
-        });
+        const { error: insertError } = await db
+          .from('focus_state')
+          .upsert({
+            user_id: currentUser.id,
+            phase: 1,
+            goal: Number(goalInput.value) || 7,
+            logged_hours: 0,
+            timer_seconds: 5400,
+            capture_text: '',
+            checks: {},
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'user_id' });
 
         if (insertError) {
           console.error('Initial insert error:', insertError);
@@ -503,7 +507,7 @@
 
       const { error } = await db
         .from('focus_state')
-        .upsert(payload);
+        .upsert(payload, { onConflict: 'user_id' });
 
       if (error) {
         console.error('Save error:', error);
@@ -511,7 +515,6 @@
     }
 
     async function sendMagicLink() {
-      const emailInput = document.getElementById('emailInput');
       const email = emailInput.value.trim();
 
       if (!email) {
@@ -550,8 +553,6 @@
       }
 
       currentUser = data.session?.user ?? null;
-
-      const authStatus = document.getElementById('authStatus');
 
       if (currentUser) {
         authStatus.textContent = `Signed in as ${currentUser.email}`;
