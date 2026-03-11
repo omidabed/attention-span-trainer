@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,27 +17,22 @@
       --bad: #f87171;
       --border: #334155;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Inter, system-ui, Arial, sans-serif;
       background: linear-gradient(180deg, #0b1220, #111827 35%, #0f172a);
       color: var(--text);
     }
+
     .container {
       max-width: 1180px;
       margin: 0 auto;
       padding: 24px;
-      <section class="card" style="margin-bottom:20px;">
-        <h2>Cloud Sync</h2>
-        <div class="row">
-          <input id="emailInput" type="text" placeholder="you@example.com" style="min-width:260px;" />
-          <button id="loginBtn">Send login link</button>
-          <button id="logoutBtn" class="secondary">Log out</button>
-        </div>
-      <p class="footer-note" id="authStatus">Not signed in</p>
-      </section>
     }
+
     .hero {
       display: grid;
       grid-template-columns: 1.3fr 0.7fr;
@@ -46,54 +40,77 @@
       align-items: stretch;
       margin-bottom: 20px;
     }
+
     .card {
-      background: rgba(17,24,39,0.95);
+      background: rgba(17, 24, 39, 0.95);
       border: 1px solid var(--border);
       border-radius: 22px;
       padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
+
     h1, h2, h3 { margin: 0 0 12px; }
     h1 { font-size: 2.2rem; }
     h2 { font-size: 1.35rem; }
-    h3 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-    p { color: var(--muted); line-height: 1.55; }
+    h3 {
+      font-size: 1rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
     .pill {
       display: inline-block;
-      background: rgba(245,158,11,0.14);
+      background: rgba(245, 158, 11, 0.14);
       color: #fbbf24;
-      border: 1px solid rgba(245,158,11,0.35);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 0.9rem;
       margin-bottom: 12px;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 20px;
     }
+
     .col-8 { grid-column: span 8; }
     .col-4 { grid-column: span 4; }
     .col-6 { grid-column: span 6; }
     .col-12 { grid-column: span 12; }
+
     .kpis {
       display: grid;
-      grid-template-columns: repeat(3,1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-top: 14px;
     }
+
     .kpi {
       background: var(--panel-2);
       padding: 14px;
       border-radius: 16px;
       border: 1px solid var(--border);
     }
-    .kpi strong { font-size: 1.5rem; display: block; margin-top: 6px; }
+
+    .kpi strong {
+      font-size: 1.5rem;
+      display: block;
+      margin-top: 6px;
+    }
+
     .controls, .phase-list, .week-grid {
       display: grid;
       gap: 12px;
     }
+
     button, select, input[type="number"], input[type="text"] {
       background: #0b1220;
       color: var(--text);
@@ -102,32 +119,38 @@
       padding: 10px 12px;
       font: inherit;
     }
+
     button {
       cursor: pointer;
       background: linear-gradient(180deg, #1d4ed8, #1e40af);
-      border-color: rgba(96,165,250,0.4);
+      border-color: rgba(96, 165, 250, 0.4);
     }
+
     button.secondary { background: #172033; }
     button.warn { background: linear-gradient(180deg, #b45309, #92400e); }
+
     .timer {
       text-align: center;
       padding: 18px;
-      background: radial-gradient(circle at top, rgba(96,165,250,0.12), transparent 60%), var(--panel-2);
+      background: radial-gradient(circle at top, rgba(96, 165, 250, 0.12), transparent 60%), var(--panel-2);
       border-radius: 18px;
       border: 1px solid var(--border);
     }
+
     .time {
       font-size: 3rem;
       font-weight: 800;
       margin: 8px 0 12px;
       letter-spacing: 0.03em;
     }
+
     .row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
     }
+
     .progress-wrap {
       background: #0b1220;
       border-radius: 999px;
@@ -135,30 +158,39 @@
       border: 1px solid var(--border);
       height: 14px;
     }
+
     .progress {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       transition: width .3s ease;
     }
+
     .phase {
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 16px;
       background: var(--panel-2);
     }
-    .phase.active { outline: 2px solid rgba(245,158,11,0.35); }
+
+    .phase.active {
+      outline: 2px solid rgba(245, 158, 11, 0.35);
+    }
+
     .checklist label {
       display: block;
       padding: 8px 0;
       color: var(--text);
     }
+
     .checklist input { margin-right: 10px; }
+
     .weekly {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 10px;
     }
+
     .day {
       background: var(--panel-2);
       border: 1px solid var(--border);
@@ -166,8 +198,15 @@
       padding: 12px;
       min-height: 110px;
     }
+
     .day h4 { margin: 0 0 8px; }
-    .day small { color: var(--muted); display: block; margin-top: 6px; }
+
+    .day small {
+      color: var(--muted);
+      display: block;
+      margin-top: 6px;
+    }
+
     textarea {
       width: 100%;
       min-height: 120px;
@@ -179,14 +218,21 @@
       color: var(--text);
       font: inherit;
     }
+
     .footer-note {
       color: var(--muted);
       font-size: 0.92rem;
       margin-top: 12px;
     }
-    .tag { color: var(--good); font-weight: 700; }
+
+    .tag {
+      color: var(--good);
+      font-weight: 700;
+    }
+
     .muted { color: var(--muted); }
     .danger { color: var(--bad); }
+
     @media (max-width: 900px) {
       .hero, .grid { display: block; }
       .card { margin-bottom: 20px; }
@@ -197,6 +243,17 @@
 </head>
 <body>
   <div class="container">
+
+    <section class="card" style="margin-bottom:20px;">
+      <h2>Cloud Sync</h2>
+      <div class="row">
+        <input id="emailInput" type="text" placeholder="you@example.com" style="min-width:260px;" />
+        <button id="loginBtn">Send login link</button>
+        <button id="logoutBtn" class="secondary">Log out</button>
+      </div>
+      <p class="footer-note" id="authStatus">Not signed in</p>
+    </section>
+
     <div class="hero">
       <section class="card">
         <div class="pill">Interactive focus dashboard</div>
@@ -208,6 +265,7 @@
           <div class="kpi"><span class="muted">Progress</span><strong id="percentLabel">0%</strong></div>
         </div>
       </section>
+
       <section class="card">
         <h2>Quick Controls</h2>
         <div class="controls">
@@ -220,9 +278,11 @@
               <option value="5">Phase 5: Dopamine Management</option>
             </select>
           </label>
+
           <label>Deep work target for this week (hours)
             <input id="goalInput" type="number" min="1" max="30" value="7" />
           </label>
+
           <div class="row">
             <button id="saveBtn">Save dashboard state</button>
             <button id="resetBtn" class="warn">Reset week</button>
@@ -300,12 +360,15 @@
       </section>
     </div>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-  const supabaseUrl = "https://qpfdxpsrncvkpjsurabw.supabase.co"
-  const supabaseKey = "sb_publishable_EegRocdu_aTzZM0n-N7Ykg_GrnaydtT"
 
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://qpfdxpsrncvkpjsurabw.supabase.co";
+    const supabaseKey = "PASTE_YOUR_REAL_PUBLIC_ANON_KEY_HERE";
+
+    const db = window.supabase.createClient(supabaseUrl, supabaseKey);
+    let currentUser = null;
+
     const phases = {
       1: {
         title: 'Phase 1: Stabilize Attention',
@@ -369,124 +432,139 @@
     const timerDisplay = document.getElementById('timerDisplay');
     const phaseList = document.getElementById('phaseList');
     const captureText = document.getElementById('captureText');
-      async function loadStateFromCloud() {
-  if (!currentUser) return;
 
-  const { data, error } = await db
-    .from('focus_state')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .maybeSingle();
+    async function loadStateFromCloud() {
+      if (!currentUser) return;
 
-  if (error) {
-    console.error('Load error:', error);
-    return;
-  }
+      const { data, error } = await db
+        .from('focus_state')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
 
-  if (!data) {
-    await db.from('focus_state').upsert({
-      user_id: currentUser.id,
-      phase: 1,
-      goal: Number(goalInput.value) || 7,
-      logged_hours: 0,
-      timer_seconds: 5400,
-      capture_text: '',
-      checks: {}
-    });
-    return loadStateFromCloud();
-  }
+      if (error) {
+        console.error('Load error:', error);
+        return;
+      }
 
-  phaseSelect.value = String(data.phase || 1);
-  goalInput.value = String(data.goal || 7);
-  loggedHours = data.logged_hours || 0;
-  timerSeconds = data.timer_seconds || 5400;
-  captureText.value = data.capture_text || '';
+      if (!data) {
+        const { error: insertError } = await db.from('focus_state').upsert({
+          user_id: currentUser.id,
+          phase: 1,
+          goal: Number(goalInput.value) || 7,
+          logged_hours: 0,
+          timer_seconds: 5400,
+          capture_text: '',
+          checks: {}
+        });
 
-  document.querySelectorAll('.daily-check').forEach(cb => {
-    cb.checked = !!(data.checks && data.checks[cb.dataset.key]);
-  });
+        if (insertError) {
+          console.error('Initial insert error:', insertError);
+          return;
+        }
 
-  renderPhases();
-  renderTimer();
-  renderProgress();
-  updateDailyScore();
-}
+        return loadStateFromCloud();
+      }
 
-async function saveState() {
-  if (!currentUser) return;
+      phaseSelect.value = String(data.phase || 1);
+      goalInput.value = String(data.goal || 7);
+      loggedHours = data.logged_hours || 0;
+      timerSeconds = data.timer_seconds || 5400;
+      captureText.value = data.capture_text || '';
 
-  const checks = {};
-  document.querySelectorAll('.daily-check').forEach(cb => {
-    checks[cb.dataset.key] = cb.checked;
-  });
+      document.querySelectorAll('.daily-check').forEach(cb => {
+        cb.checked = !!(data.checks && data.checks[cb.dataset.key]);
+      });
 
-  const payload = {
-    user_id: currentUser.id,
-    phase: Number(phaseSelect.value),
-    goal: Number(goalInput.value),
-    logged_hours: loggedHours,
-    timer_seconds: timerSeconds,
-    capture_text: captureText.value,
-    checks,
-    updated_at: new Date().toISOString()
-  };
-
-  const { error } = await db
-    .from('focus_state')
-    .upsert(payload);
-
-  if (error) {
-    console.error('Save error:', error);
-  }
-}
-
-async function sendMagicLink() {
-  const email = document.getElementById('emailInput').value.trim();
-  if (!email) {
-    alert('Enter your email first.');
-    return;
-  }
-
-  const { error } = await db.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: window.location.origin + window.location.pathname
+      renderPhases();
+      renderTimer();
+      renderProgress();
+      updateDailyScore();
     }
-  });
 
-  if (error) {
-    alert('Login failed: ' + error.message);
-    return;
-  }
+    async function saveState() {
+      if (!currentUser) return;
 
-  alert('Check your email for the login link.');
-}
+      const checks = {};
+      document.querySelectorAll('.daily-check').forEach(cb => {
+        checks[cb.dataset.key] = cb.checked;
+      });
 
-async function logout() {
-  await db.auth.signOut();
-}
+      const payload = {
+        user_id: currentUser.id,
+        phase: Number(phaseSelect.value),
+        goal: Number(goalInput.value),
+        logged_hours: loggedHours,
+        timer_seconds: timerSeconds,
+        capture_text: captureText.value,
+        checks,
+        updated_at: new Date().toISOString()
+      };
 
-async function refreshSession() {
-  const { data, error } = await db.auth.getSession();
-  if (error) {
-    console.error(error);
-    return;
-  }
+      const { error } = await db
+        .from('focus_state')
+        .upsert(payload);
 
-  currentUser = data.session?.user ?? null;
+      if (error) {
+        console.error('Save error:', error);
+      }
+    }
 
-  const authStatus = document.getElementById('authStatus');
-  if (currentUser) {
-    authStatus.textContent = `Signed in as ${currentUser.email}`;
-    await loadStateFromCloud();
-  } else {
-    authStatus.textContent = 'Not signed in';
-  }
-}
+    async function sendMagicLink() {
+      const emailInput = document.getElementById('emailInput');
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        alert('Enter your email first.');
+        return;
+      }
+
+      const { error } = await db.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.origin + window.location.pathname
+        }
+      });
+
+      if (error) {
+        alert('Login failed: ' + error.message);
+        return;
+      }
+
+      alert('Check your email for the login link.');
+    }
+
+    async function logout() {
+      const { error } = await db.auth.signOut();
+      if (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    async function refreshSession() {
+      const { data, error } = await db.auth.getSession();
+
+      if (error) {
+        console.error('Session error:', error);
+        return;
+      }
+
+      currentUser = data.session?.user ?? null;
+
+      const authStatus = document.getElementById('authStatus');
+
+      if (currentUser) {
+        authStatus.textContent = `Signed in as ${currentUser.email}`;
+        await loadStateFromCloud();
+      } else {
+        authStatus.textContent = 'Not signed in';
+      }
+    }
 
     function renderPhases() {
       const current = phases[phaseSelect.value];
       phaseLabel.textContent = current.title.replace(':', '');
+
       phaseList.innerHTML = Object.entries(phases).map(([id, phase]) => `
         <div class="phase ${id === phaseSelect.value ? 'active' : ''}">
           <h3>${phase.title}</h3>
@@ -500,6 +578,7 @@ async function refreshSession() {
     function renderProgress() {
       const goal = Number(goalInput.value) || 7;
       const percent = Math.min(100, Math.round((loggedHours / goal) * 100));
+
       loggedHoursEl.textContent = `${loggedHours.toFixed(1)} h`;
       goalLabel.textContent = `${goal} h`;
       goalInline.textContent = `${goal} h`;
@@ -531,6 +610,7 @@ async function refreshSession() {
 
     document.getElementById('startBtn').addEventListener('click', () => {
       if (interval) return;
+
       interval = setInterval(() => {
         if (timerSeconds > 0) {
           timerSeconds -= 1;
@@ -543,12 +623,7 @@ async function refreshSession() {
         }
       }, 1000);
     });
-    document.getElementById('loginBtn').addEventListener('click', sendMagicLink);
-document.getElementById('logoutBtn').addEventListener('click', logout);
 
-db.auth.onAuthStateChange(async () => {
-  await refreshSession();
-});
     document.getElementById('pauseBtn').addEventListener('click', () => {
       clearInterval(interval);
       interval = null;
@@ -556,14 +631,31 @@ db.auth.onAuthStateChange(async () => {
     });
 
     document.getElementById('completeBtn').addEventListener('click', () => {
-      loggedHours += Math.max(0.5, Math.round((timerSeconds === 0 ? 90 : (Number(timerDisplay.textContent.split(':')[0]) || 0)) / 60 * 10) / 10);
+      loggedHours += Math.max(
+        0.5,
+        Math.round((timerSeconds === 0 ? 90 : (Number(timerDisplay.textContent.split(':')[0]) || 0)) / 60 * 10) / 10
+      );
       renderProgress();
       saveState();
     });
 
-    document.getElementById('addHalf').addEventListener('click', () => { loggedHours += 0.5; renderProgress(); saveState(); });
-    document.getElementById('addOne').addEventListener('click', () => { loggedHours += 1; renderProgress(); saveState(); });
-    document.getElementById('subtract').addEventListener('click', () => { loggedHours = Math.max(0, loggedHours - 0.5); renderProgress(); saveState(); });
+    document.getElementById('addHalf').addEventListener('click', () => {
+      loggedHours += 0.5;
+      renderProgress();
+      saveState();
+    });
+
+    document.getElementById('addOne').addEventListener('click', () => {
+      loggedHours += 1;
+      renderProgress();
+      saveState();
+    });
+
+    document.getElementById('subtract').addEventListener('click', () => {
+      loggedHours = Math.max(0, loggedHours - 0.5);
+      renderProgress();
+      saveState();
+    });
 
     phaseSelect.addEventListener('change', () => {
       const phase = phases[phaseSelect.value];
@@ -573,12 +665,22 @@ db.auth.onAuthStateChange(async () => {
       saveState();
     });
 
-    goalInput.addEventListener('input', () => { renderProgress(); saveState(); });
-    captureText.addEventListener('input', saveState);
-    document.querySelectorAll('.daily-check').forEach(cb => cb.addEventListener('change', () => { updateDailyScore(); saveState(); }));
-
-    document.getElementById('saveBtn').addEventListener('click', () => {
+    goalInput.addEventListener('input', () => {
+      renderProgress();
       saveState();
+    });
+
+    captureText.addEventListener('input', saveState);
+
+    document.querySelectorAll('.daily-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateDailyScore();
+        saveState();
+      });
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      await saveState();
       alert('Saved. Your future self has fewer excuses now.');
     });
 
@@ -593,11 +695,18 @@ db.auth.onAuthStateChange(async () => {
       saveState();
     });
 
-renderPhases();
-renderTimer();
-renderProgress();
-updateDailyScore();
-refreshSession();
+    document.getElementById('loginBtn').addEventListener('click', sendMagicLink);
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    db.auth.onAuthStateChange(async () => {
+      await refreshSession();
+    });
+
+    renderPhases();
+    renderTimer();
+    renderProgress();
+    updateDailyScore();
+    refreshSession();
   </script>
 </body>
 </html>
