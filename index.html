@@ -302,8 +302,8 @@
   </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-  const supabaseUrl = "YOUR_PROJECT_URL"
-  const supabaseKey = "YOUR_PUBLIC_ANON_KEY"
+  const supabaseUrl = "https://qpfdxpsrncvkpjsurabw.supabase.co"
+  const supabaseKey = "sb_publishable_EegRocdu_aTzZM0n-N7Ykg_GrnaydtT"
 
   const supabase = supabase.createClient(supabaseUrl, supabaseKey)
     const phases = {
@@ -354,10 +354,9 @@
       }
     };
 
-    const state = JSON.parse(localStorage.getItem('attentionSpanDashboard') || '{}');
-    let timerSeconds = state.timerSeconds || 5400;
+    let timerSeconds = 5400;
     let interval = null;
-    let loggedHours = state.loggedHours || 0;
+    let loggedHours = 0;
 
     const phaseSelect = document.getElementById('phaseSelect');
     const goalInput = document.getElementById('goalInput');
@@ -370,19 +369,120 @@
     const timerDisplay = document.getElementById('timerDisplay');
     const phaseList = document.getElementById('phaseList');
     const captureText = document.getElementById('captureText');
+      async function loadStateFromCloud() {
+  if (!currentUser) return;
 
-    function saveState() {
-      const checks = {};
-      document.querySelectorAll('.daily-check').forEach(cb => checks[cb.dataset.key] = cb.checked);
-      localStorage.setItem('attentionSpanDashboard', JSON.stringify({
-        phase: phaseSelect.value,
-        goal: Number(goalInput.value),
-        loggedHours,
-        timerSeconds,
-        captureText: captureText.value,
-        checks
-      }));
+  const { data, error } = await db
+    .from('focus_state')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Load error:', error);
+    return;
+  }
+
+  if (!data) {
+    await db.from('focus_state').upsert({
+      user_id: currentUser.id,
+      phase: 1,
+      goal: Number(goalInput.value) || 7,
+      logged_hours: 0,
+      timer_seconds: 5400,
+      capture_text: '',
+      checks: {}
+    });
+    return loadStateFromCloud();
+  }
+
+  phaseSelect.value = String(data.phase || 1);
+  goalInput.value = String(data.goal || 7);
+  loggedHours = data.logged_hours || 0;
+  timerSeconds = data.timer_seconds || 5400;
+  captureText.value = data.capture_text || '';
+
+  document.querySelectorAll('.daily-check').forEach(cb => {
+    cb.checked = !!(data.checks && data.checks[cb.dataset.key]);
+  });
+
+  renderPhases();
+  renderTimer();
+  renderProgress();
+  updateDailyScore();
+}
+
+async function saveState() {
+  if (!currentUser) return;
+
+  const checks = {};
+  document.querySelectorAll('.daily-check').forEach(cb => {
+    checks[cb.dataset.key] = cb.checked;
+  });
+
+  const payload = {
+    user_id: currentUser.id,
+    phase: Number(phaseSelect.value),
+    goal: Number(goalInput.value),
+    logged_hours: loggedHours,
+    timer_seconds: timerSeconds,
+    capture_text: captureText.value,
+    checks,
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await db
+    .from('focus_state')
+    .upsert(payload);
+
+  if (error) {
+    console.error('Save error:', error);
+  }
+}
+
+async function sendMagicLink() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email) {
+    alert('Enter your email first.');
+    return;
+  }
+
+  const { error } = await db.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: window.location.origin + window.location.pathname
     }
+  });
+
+  if (error) {
+    alert('Login failed: ' + error.message);
+    return;
+  }
+
+  alert('Check your email for the login link.');
+}
+
+async function logout() {
+  await db.auth.signOut();
+}
+
+async function refreshSession() {
+  const { data, error } = await db.auth.getSession();
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  currentUser = data.session?.user ?? null;
+
+  const authStatus = document.getElementById('authStatus');
+  if (currentUser) {
+    authStatus.textContent = `Signed in as ${currentUser.email}`;
+    await loadStateFromCloud();
+  } else {
+    authStatus.textContent = 'Not signed in';
+  }
+}
 
     function renderPhases() {
       const current = phases[phaseSelect.value];
@@ -443,7 +543,12 @@
         }
       }, 1000);
     });
+    document.getElementById('loginBtn').addEventListener('click', sendMagicLink);
+document.getElementById('logoutBtn').addEventListener('click', logout);
 
+db.auth.onAuthStateChange(async () => {
+  await refreshSession();
+});
     document.getElementById('pauseBtn').addEventListener('click', () => {
       clearInterval(interval);
       interval = null;
@@ -488,17 +593,11 @@
       saveState();
     });
 
-    // Init from saved state
-    phaseSelect.value = String(state.phase || '1');
-    goalInput.value = String(state.goal || phases[phaseSelect.value].goal);
-    captureText.value = state.captureText || '';
-    if (state.checks) {
-      document.querySelectorAll('.daily-check').forEach(cb => cb.checked = !!state.checks[cb.dataset.key]);
-    }
-    renderPhases();
-    renderTimer();
-    renderProgress();
-    updateDailyScore();
+renderPhases();
+renderTimer();
+renderProgress();
+updateDailyScore();
+refreshSession();
   </script>
 </body>
 </html>
